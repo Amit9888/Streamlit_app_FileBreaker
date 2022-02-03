@@ -130,3 +130,55 @@ if data_file is not None:
                 
         
         counter=0
+        for emp_code,name,send_to,final_CC in zip(mapped_employeeId,Names_df_2,to_df_2,final_CC_df_2):
+            
+                    
+            if send_to!=send_to or emp_code!=emp_code or send_to!=send_to or final_CC!=final_CC :
+                print("There  is a empty field in one of the column that  has been encountered")
+                logging.debug("There is a empty field in one of the column that has been encountered")
+                continue
+            
+
+            today = date.today()
+            
+        
+            mail = outlook.CreateItem(0)
+            
+
+            Name=name
+            
+            today_day=today.strftime("%B %d, %Y")
+            
+            From = None
+            for myEmailAddress in outlook.Session.Accounts:
+                if "MISOLUTIONS@futuregenerali.in" in str(myEmailAddress):
+                    From = myEmailAddress
+                    break
+                 
+
+            if From != None:
+            # This line basically calls the "mail.SendUsingAccount = xyz@email.com" outlook VBA command
+               mail._oleobj_.Invoke(*(64209, 0, 8, 0, From))
+              
+
+            mail.To=send_to  
+            mail.CC = final_CC
+           
+            mail_text=f'<h4>Dear {name},</h4><p>Please find attached  BM & Above GS  performance update till  30th nov</p><p>All the best!</p><p>In case of any queries write to Supriya.Ghadge@futuregenerali.in </p><p>Regards,</p><p>Team BI</p>'
+            name=name.lower()
+      
+            
+            mail.Attachments.Add(f'{parent_dir}/Employee_Code_No-{emp_code}_{name}_report.xlsx')
+            mail.Subject = f'BM & Above  Goalsheet update_{name} as on 30th Nov'
+            mail.HTMLBody = mail_text
+            try:
+                mail.Send()
+            except:
+                print("A exception has been raised..Continuing with the next one")
+                logging.debug(f"Something went wrong while shotting the email for {emp_code} and  the concerned  emailid {send_to} with cc {final_CC}")
+                continue
+            
+            counter+=1
+        
+            print(counter)
+
