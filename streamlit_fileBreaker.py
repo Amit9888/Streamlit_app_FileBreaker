@@ -1,7 +1,7 @@
 import pandas as pd
 
 import streamlit as st
-import win32com.client
+import win32com
 import time
 from xlsxwriter.utility import xl_rowcol_to_cell
 import pandas as pd
